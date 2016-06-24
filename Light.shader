@@ -31,7 +31,7 @@
 			Cull Front
 			ZTest Always
 			Stencil {
-			    Ref 1
+			    Ref 2
 			    Comp equal
 			}
 
@@ -51,7 +51,7 @@
 			Cull Front
 			ZTest Always
 			Stencil {
-			    Ref 2
+			    Ref 3
 			    Comp Equal
 			}
 
@@ -71,7 +71,7 @@
 			Cull Front
 			ZTest Always
 			Stencil {
-			    Ref 3
+			    Ref 4
 			    Comp Equal
 			}
 

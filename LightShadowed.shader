@@ -1,4 +1,4 @@
-﻿Shader "LightSource" {
+﻿Shader "LightShadowed" {
 	Properties {
         _Color ("Corona Color", Color) = (1,1,1,0)
         _Opacity("Corona Opacity", Range (0,1)) = 0.25
@@ -32,29 +32,15 @@
 
 
 		Pass {
-			Cull off
-			Zwrite Off
-			ZTest Less
-			Blend One One
-			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
-			ENDCG
-		}
-
-
-		Pass {
-			Cull off
+			Cull Front
 			Zwrite Off
 			ZTest Greater
 			ColorMask 0
 
 			Stencil {
-				Ref 1
-				//Comp GEqual
+				Ref 2
 				Comp always
-				PassBack IncrWrap
-				PassFront DecrSat
+				Pass replace
 				//Pass IncrWrap
 			}
 
@@ -63,5 +49,46 @@
 			#pragma fragment frag
 			ENDCG
 		}
-	} 
+
+
+		Pass {
+			Cull Back
+			Zwrite Off
+			ZTest Greater
+			ColorMask 0
+
+			Stencil {
+				Comp always
+				Pass DecrSat
+			}
+
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+			ENDCG
+		}
+
+
+		Pass{
+        	//Name "StencilLight"
+			Blend One One
+			ColorMask RGB
+			Cull Front
+			ZTest Always
+			Stencil {
+			    Ref 2
+			    Comp GEqual
+			    Pass Replace
+			}
+
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment fragLight
+			half4 fragLight(v2f i) : COLOR {
+		    return _Color;
+			}
+			ENDCG
+		}
+
+    } 
 }

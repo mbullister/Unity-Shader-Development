@@ -1,4 +1,4 @@
-﻿Shader "LightShadow" {
+﻿Shader "ShadowVolume" {
 	Properties {
         _Color ("Shadow Color", Color) = (0,0,0,0)
         _Opacity("Shadow Opacity", Range (0,1)) = 0.1
@@ -32,14 +32,36 @@
         ENDCG
 
         Pass {
+			Cull Off
+			Zwrite Off
+			ZTest Greater
+			ColorMask 0
+            Blend DstColor Zero
+
+			Stencil {
+				Ref 255
+				CompBack always
+				PassBack Invert
+				CompFront Greater
+				PassFront Invert
+				FailFront Zero
+				//Pass IncrWrap
+			}
+
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+			ENDCG
+		}
+		Pass {
 			Name "StencilShadow"
-            Cull Back
+            Cull Off
             ZTest Less
             Blend DstColor Zero
 
             Stencil {
-            	Comp always
-            	Pass Zero
+            	Ref 0
+            	Comp Equal
        		}
 
             CGPROGRAM
